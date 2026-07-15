@@ -54,6 +54,15 @@ class Cuenta:
     def consultar_historial(self):
         return self.historial_transacciones
 
+class Cliente:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.cuentas = {}
+
+    def agregar_cuenta(self, cuenta):
+        self.cuentas[cuenta.numero_cuenta] = cuenta
+
+
 class SaldoInsuficienteError(Exception):
     pass
 
