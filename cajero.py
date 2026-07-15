@@ -21,10 +21,43 @@ class Cuenta:
             self.intentos_fallidos += 1
             raise SaldoInsuficienteError("Saldo insuficiente, intente con una menor cantidad o recargue su cuenta")
 
-    
+    def depositar(self, monto):
+        if monto > 0:
+            self.saldo += monto
+            self.historial_transacciones.append({
+                "tipo": "depósito",
+                "monto": monto,
+                "fecha": datetime.datetime.now()
+            })
+        else:
+            raise MontoInvalidoError("El monto a depositar es invalido")
+
+    def retirar(self, monto):
+        self.validar_saldo(monto)
+        self.saldo -= monto
+        self.historial_transacciones.append({
+            "tipo": "retiro",
+            "monto": monto,
+            "fecha": datetime.datetime.now()
+            })
+
+    def transferir(self, monto, cuenta_destino):
+        self.retirar(monto)
+        cuenta_destino.depositar(monto)
+        self.historial_transacciones.append({
+            "tipo": "transferencia",
+            "monto": monto,
+            "fecha": datetime.datetime.now(),
+            "cuenta_destino": cuenta_destino.numero_cuenta[-4:]
+        })
+
+    def consultar_historial(self):
+        return self.historial_transacciones
 
 class SaldoInsuficienteError(Exception):
     pass
 
 class IntentosExcedidosError(Exception):
+    pass
+class MontoInvalidoError(Exception):
     pass
