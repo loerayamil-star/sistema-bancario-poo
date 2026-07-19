@@ -62,6 +62,9 @@ class Cliente:
     def agregar_cuenta(self, cuenta):
         self.cuentas[cuenta.numero_cuenta] = cuenta
 
+    def consultar_cuentas(self):
+        return self.cuentas
+
 
 class SaldoInsuficienteError(Exception):
     pass
