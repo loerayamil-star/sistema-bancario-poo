@@ -73,6 +73,15 @@ class Cliente:
 
     def consultar_cuentas(self):
         return self.cuentas
+    
+    def a_diccionario(self):
+        cuentas_convertidas ={}
+        for numero, cuenta in self.cuentas.items():
+            cuentas_convertidas[numero] = cuenta.a_diccionario()
+        return {
+            "nombre": self.nombre,
+            "cuentas": cuentas_convertidas
+        }
 
 class SistemaBancario:
     def __init__(self):
