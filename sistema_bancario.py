@@ -108,6 +108,20 @@ class SistemaBancario:
             return cuenta
         else:
             raise CuentaNoEncontradaError("Cuenta no encontrada")
+        
+    def a_diccionario(self):
+        clientes_convertidos = {}
+        for nombre, cliente in self.base_clientes.items():
+            clientes_convertidos[nombre] = cliente.a_diccionario()
+
+        cuentas_convertidas = {}
+        for numero, cuenta in self.base_sistema.items():
+            cuentas_convertidas[numero] = cuenta.a_diccionario()
+            
+        return {
+            "clientes": clientes_convertidos,
+            "cuentas": cuentas_convertidas
+        }
 
 class ClienteNoEncontradoError(Exception):
     pass
