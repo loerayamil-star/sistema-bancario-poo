@@ -55,11 +55,20 @@ class Cuenta:
         return self.historial_transacciones
 
     def a_diccionario(self):
+        historial_convertido = []
+        for transaccion in self.historial_transacciones:
+            nueva_transaccion = {
+                "tipo": transaccion["tipo"],
+                "monto": transaccion["monto"],
+                "fecha": transaccion["fecha"].isoformat()
+            }
+            historial_convertido.append(nueva_transaccion)
+
         return {
             "numero_cuenta": self.numero_cuenta,
             "saldo": self.saldo,
             "contrasena": self.contrasena,
-            "historial_transacciones": self.historial_transacciones,
+            "historial_transacciones": historial_convertido,
             "intentos_fallidos": self.intentos_fallidos
         }
 
@@ -117,7 +126,7 @@ class SistemaBancario:
         cuentas_convertidas = {}
         for numero, cuenta in self.base_sistema.items():
             cuentas_convertidas[numero] = cuenta.a_diccionario()
-            
+
         return {
             "clientes": clientes_convertidos,
             "cuentas": cuentas_convertidas
