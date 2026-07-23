@@ -73,6 +73,14 @@ class Cuenta:
             "intentos_fallidos": self.intentos_fallidos
         }
 
+    @classmethod
+    def desde_diccionario(cls, datos):
+        cuenta_nueva = cls(datos["numero_cuenta"], datos["contrasena"])
+        cuenta_nueva.saldo = datos["saldo"]
+        cuenta_nueva.historial_transacciones = datos["historial_transacciones"]
+        cuenta_nueva.intentos_fallidos = datos["intentos_fallidos"]
+        return cuenta_nueva
+
 class Cliente:
     def __init__(self, nombre):
         self.nombre = nombre
@@ -92,6 +100,14 @@ class Cliente:
             "nombre": self.nombre,
             "cuentas": cuentas_convertidas
         }
+
+    @classmethod
+    def desde_diccionario(cls, datos):
+        cliente_nuevo = cls(datos["nombre"])
+        for numero, datos_cuenta in datos["cuentas"].items():
+            cuenta_nueva = Cuenta.desde_diccionario(datos_cuenta)
+            cliente_nuevo.agregar_cuenta(cuenta_nueva)
+        return cliente_nuevo
 
 class SistemaBancario:
     def __init__(self):
