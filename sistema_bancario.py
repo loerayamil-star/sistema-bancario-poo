@@ -62,7 +62,7 @@ class Cuenta:
         })
 
     def consultar_historial(self):
-        return self.historial_transacciones
+        return self.historial_transacciones.copy()
 
     def a_diccionario(self):
         historial_convertido = []
@@ -107,7 +107,7 @@ class Cliente:
         self.cuentas[cuenta.numero_cuenta] = cuenta
 
     def consultar_cuentas(self):
-        return self.cuentas
+        return self.cuentas.copy()
 
     def a_diccionario(self):
         cuentas_convertidas ={}
