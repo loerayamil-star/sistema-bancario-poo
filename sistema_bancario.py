@@ -1,6 +1,7 @@
 import time
 import datetime
 import json 
+import hashlib
 
 # =====
 
@@ -8,7 +9,7 @@ class Cuenta:
     def __init__(self, numero_cuenta, contrasena):
         self.numero_cuenta = numero_cuenta
         self.saldo = 0
-        self.contrasena = contrasena
+        self.contrasena = hashlib.sha256(contrasena.encode()).hexdigest()
         self.historial_transacciones = []
         self.intentos_fallidos = 0
 
@@ -63,6 +64,17 @@ class Cuenta:
 
     def consultar_historial(self):
         return self.historial_transacciones.copy()
+
+    def verificar_contrasena(self, contrasena_ingresada):
+        if not contrasena_ingresada.isdigit():
+            raise ContrasenaInvalidaError("La contraseña debe ser numérica")
+        
+        hash_ingresado = hashlib.sha256(contrasena_ingresada.encode()).hexdigest()
+        if hash_ingresado == self.contrasena:
+            return True
+        else:
+            self.intentos_fallidos += 1
+            raise ContrasenaIncorrectaError("Contraseña incorrecta")
 
     def a_diccionario(self):
         historial_convertido = []
@@ -189,6 +201,12 @@ class SistemaBancario:
             sistema_nuevo.base_sistema[numero] = cuenta
         return sistema_nuevo
 
+class ContrasenaInvalidaError(Exception):
+    pass
+
+class ContrasenaIncorrectaError(Exception):
+    pass
+
 class ClienteNoEncontradoError(Exception):
     pass
 
@@ -202,14 +220,3 @@ class IntentosExcedidosError(Exception):
     pass
 class MontoInvalidoError(Exception):
     pass
-
-
-banco = SistemaBancario()
-mi_cliente = Cliente("Yamil")
-banco.agregar_cliente(mi_cliente)
-banco.agregar_cuenta(mi_cliente, Cuenta("1234567890", "1234"))
-registrar_cuenta = banco.agregar_cuenta(mi_cliente, Cuenta("0987654321", "5678"))
-depositar = banco.buscar_cuenta("1234567890").depositar(1000)
-guardar = banco.guardar_json()
-banco_cargado = SistemaBancario.cargar_json()
-print(banco_cargado.buscar_cuenta("1234567890").saldo)
