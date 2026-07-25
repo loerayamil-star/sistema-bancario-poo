@@ -86,7 +86,15 @@ class Cuenta:
     def desde_diccionario(cls, datos):
         cuenta_nueva = cls(datos["numero_cuenta"], datos["contrasena"])
         cuenta_nueva.saldo = datos["saldo"]
-        cuenta_nueva.historial_transacciones = datos["historial_transacciones"]
+        historial_restaurado = []
+        for transaccion in datos["historial_transacciones"]:
+            nueva_transaccion = {
+            "tipo": transaccion["tipo"],
+            "monto": transaccion["monto"],
+            "fecha": datetime.datetime.fromisoformat(transaccion["fecha"])
+            }
+            historial_restaurado.append(nueva_transaccion)
+        cuenta_nueva.historial_transacciones = historial_restaurado
         cuenta_nueva.intentos_fallidos = datos["intentos_fallidos"]
         return cuenta_nueva
 
@@ -100,7 +108,7 @@ class Cliente:
 
     def consultar_cuentas(self):
         return self.cuentas
-    
+
     def a_diccionario(self):
         cuentas_convertidas ={}
         for numero, cuenta in self.cuentas.items():
@@ -180,7 +188,7 @@ class SistemaBancario:
             cuenta = Cuenta.desde_diccionario(datos_cuenta)
             sistema_nuevo.base_sistema[numero] = cuenta
         return sistema_nuevo
-    
+
 class ClienteNoEncontradoError(Exception):
     pass
 
