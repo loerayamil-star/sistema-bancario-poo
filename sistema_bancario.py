@@ -156,7 +156,17 @@ class SistemaBancario:
 
     @classmethod
     def cargar_json(cls, nombre_archivo="datos_banco.json"):
-        pass
+        with open(nombre_archivo, "r", encoding="utf-8") as archivo:
+            datos = json.load(archivo)
+        sistema_nuevo = cls()
+        for nombre, datos_cliente in datos["clientes"].items():
+            cliente = Cliente.desde_diccionario(datos_cliente)
+            sistema_nuevo.agregar_cliente(cliente)
+        for numero, datos_cuenta in datos["cuentas"].items():
+            cuenta = Cuenta.desde_diccionario(datos_cuenta)
+            sistema_nuevo.base_sistema[numero] = cuenta
+        return sistema_nuevo
+    
 class ClienteNoEncontradoError(Exception):
     pass
 
