@@ -180,3 +180,14 @@ class IntentosExcedidosError(Exception):
     pass
 class MontoInvalidoError(Exception):
     pass
+
+
+banco = SistemaBancario()
+mi_cliente = Cliente("Yamil")
+banco.agregar_cliente(mi_cliente)
+banco.agregar_cuenta(mi_cliente, Cuenta("1234567890", "1234"))
+registrar_cuenta = banco.agregar_cuenta(mi_cliente, Cuenta("0987654321", "5678"))
+depositar = banco.buscar_cuenta("1234567890").depositar(1000)
+guardar = banco.guardar_json()
+banco_cargado = SistemaBancario.cargar_json()
+print(banco_cargado.buscar_cuenta("1234567890").saldo)

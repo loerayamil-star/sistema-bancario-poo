@@ -1,0 +1,51 @@
+{
+    "clientes": {
+        "Yamil": {
+            "nombre": "Yamil",
+            "cuentas": {
+                "1234567890": {
+                    "numero_cuenta": "1234567890",
+                    "saldo": 1000,
+                    "contrasena": "1234",
+                    "historial_transacciones": [
+                        {
+                            "tipo": "depósito",
+                            "monto": 1000,
+                            "fecha": "2026-07-24T20:18:19.171692"
+                        }
+                    ],
+                    "intentos_fallidos": 0
+                },
+                "0987654321": {
+                    "numero_cuenta": "0987654321",
+                    "saldo": 0,
+                    "contrasena": "5678",
+                    "historial_transacciones": [],
+                    "intentos_fallidos": 0
+                }
+            }
+        }
+    },
+    "cuentas": {
+        "1234567890": {
+            "numero_cuenta": "1234567890",
+            "saldo": 1000,
+            "contrasena": "1234",
+            "historial_transacciones": [
+                {
+                    "tipo": "depósito",
+                    "monto": 1000,
+                    "fecha": "2026-07-24T20:18:19.171692"
+                }
+            ],
+            "intentos_fallidos": 0
+        },
+        "0987654321": {
+            "numero_cuenta": "0987654321",
+            "saldo": 0,
+            "contrasena": "5678",
+            "historial_transacciones": [],
+            "intentos_fallidos": 0
+        }
+    }
+}
