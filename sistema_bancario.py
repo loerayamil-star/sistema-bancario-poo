@@ -143,7 +143,12 @@ class SistemaBancario:
             return cuenta
         else:
             raise CuentaNoEncontradaError("Cuenta no encontrada")
-        
+
+    def realizar_transferencia(self, numero_origen, numero_destino, monto):
+        cuenta_origen = self.buscar_cuenta(numero_origen)
+        cuenta_destino = self.buscar_cuenta(numero_destino)
+        cuenta_origen.transferir(monto, cuenta_destino)
+
     def a_diccionario(self):
         clientes_convertidos = {}
         for nombre, cliente in self.base_clientes.items():
