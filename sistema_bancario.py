@@ -50,6 +50,8 @@ class Cuenta:
             })
 
     def transferir(self, monto, cuenta_destino):
+        if not isinstance(cuenta_destino, Cuenta):
+            raise CuentaNoEncontradaError("La cuenta destino no es válida")
         self.retirar(monto)
         cuenta_destino.depositar(monto)
         self.historial_transacciones.append({
