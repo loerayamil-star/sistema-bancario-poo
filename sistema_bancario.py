@@ -15,25 +15,32 @@ class Cuenta:
     def validar_saldo(self, monto):
         if self.intentos_fallidos >= 5:
             raise IntentosExcedidosError("Se han excedido los intentos de transacción")
-        
+
         if self.saldo >= monto:
             return True
         else:
             self.intentos_fallidos += 1
             raise SaldoInsuficienteError("Saldo insuficiente, intente con una menor cantidad o recargue su cuenta")
 
-    def depositar(self, monto):
+    def validar_monto(self, monto):
+        if not isinstance(monto, (int, float)):
+            raise MontoInvalidoError("El monto debe ser un número")
         if monto > 0:
-            self.saldo += monto
-            self.historial_transacciones.append({
+            return True
+        else:
+            raise MontoInvalidoError("El monto debe ser mayor a cero")
+
+    def depositar(self, monto):
+        self.validar_monto(monto)
+        self.saldo += monto
+        self.historial_transacciones.append({
                 "tipo": "depósito",
                 "monto": monto,
                 "fecha": datetime.datetime.now()
-            })
-        else:
-            raise MontoInvalidoError("El monto a depositar es invalido")
+        })
 
     def retirar(self, monto):
+        self.validar_monto(monto)
         self.validar_saldo(monto)
         self.saldo -= monto
         self.historial_transacciones.append({
