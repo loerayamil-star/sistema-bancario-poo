@@ -1,9 +1,9 @@
-import time
 import datetime
-import json 
 import hashlib
+import json
 
 # =====
+
 
 class Cuenta:
     def __init__(self, numero_cuenta, contrasena):
@@ -15,21 +15,26 @@ class Cuenta:
 
     def validar_saldo(self, monto):
         if self.intentos_fallidos >= 5:
-            raise IntentosExcedidosError("Se han excedido los intentos de transacción")
+            raise IntentosExcedidosError(
+                "Se han excedido los intentos de transacción")
 
         if self.saldo >= monto:
             return True
         else:
             self.intentos_fallidos += 1
-            raise SaldoInsuficienteError("Saldo insuficiente, intente con una menor cantidad o recargue su cuenta")
+            raise SaldoInsuficienteError(
+                "Saldo insuficiente, intente con una menor cantidad "
+                "o recargue su cuenta")
 
     def validar_monto(self, monto):
         if not isinstance(monto, (int, float)):
-            raise MontoInvalidoError("El monto debe ser un número")
+            raise MontoInvalidoError(
+                "El monto debe ser un número")
         if monto > 0:
             return True
         else:
-            raise MontoInvalidoError("El monto debe ser mayor a cero")
+            raise MontoInvalidoError(
+                "El monto debe ser mayor a cero")
 
     def depositar(self, monto):
         self.validar_monto(monto)
@@ -37,7 +42,7 @@ class Cuenta:
         self.historial_transacciones.append({
                 "tipo": "depósito",
                 "monto": monto,
-                "fecha": datetime.datetime.now()
+                "fecha": datetime.datetime.now(datetime.timezone.utc)
         })
 
     def retirar(self, monto):
@@ -47,7 +52,7 @@ class Cuenta:
         self.historial_transacciones.append({
             "tipo": "retiro",
             "monto": monto,
-            "fecha": datetime.datetime.now()
+            "fecha": datetime.datetime.now(datetime.timezone.utc)
             })
 
     def transferir(self, monto, cuenta_destino):
@@ -58,7 +63,7 @@ class Cuenta:
         self.historial_transacciones.append({
             "tipo": "transferencia",
             "monto": monto,
-            "fecha": datetime.datetime.now(),
+            "fecha": datetime.datetime.now(datetime.timezone.utc),
             "cuenta_destino": cuenta_destino.numero_cuenta[-4:]
         })
 
@@ -68,8 +73,9 @@ class Cuenta:
     def verificar_contrasena(self, contrasena_ingresada):
         if not contrasena_ingresada.isdigit():
             raise ContrasenaInvalidaError("La contraseña debe ser numérica")
-        
-        hash_ingresado = hashlib.sha256(contrasena_ingresada.encode()).hexdigest()
+
+        hash_ingresado = hashlib.sha256(
+            contrasena_ingresada.encode()).hexdigest()
         if hash_ingresado == self.contrasena:
             return True
         else:
@@ -101,14 +107,15 @@ class Cuenta:
         historial_restaurado = []
         for transaccion in datos["historial_transacciones"]:
             nueva_transaccion = {
-            "tipo": transaccion["tipo"],
-            "monto": transaccion["monto"],
-            "fecha": datetime.datetime.fromisoformat(transaccion["fecha"])
+                "tipo": transaccion["tipo"],
+                "monto": transaccion["monto"],
+                "fecha": datetime.datetime.fromisoformat(transaccion["fecha"])
             }
             historial_restaurado.append(nueva_transaccion)
         cuenta_nueva.historial_transacciones = historial_restaurado
         cuenta_nueva.intentos_fallidos = datos["intentos_fallidos"]
         return cuenta_nueva
+
 
 class Cliente:
     def __init__(self, nombre):
@@ -122,7 +129,7 @@ class Cliente:
         return self.cuentas.copy()
 
     def a_diccionario(self):
-        cuentas_convertidas ={}
+        cuentas_convertidas = {}
         for numero, cuenta in self.cuentas.items():
             cuentas_convertidas[numero] = cuenta.a_diccionario()
         return {
@@ -133,10 +140,11 @@ class Cliente:
     @classmethod
     def desde_diccionario(cls, datos):
         cliente_nuevo = cls(datos["nombre"])
-        for numero, datos_cuenta in datos["cuentas"].items():
+        for datos_cuenta in datos["cuentas"].values():
             cuenta_nueva = Cuenta.desde_diccionario(datos_cuenta)
             cliente_nuevo.agregar_cuenta(cuenta_nueva)
         return cliente_nuevo
+
 
 class SistemaBancario:
     def __init__(self):
@@ -193,7 +201,7 @@ class SistemaBancario:
         with open(nombre_archivo, "r", encoding="utf-8") as archivo:
             datos = json.load(archivo)
         sistema_nuevo = cls()
-        for nombre, datos_cliente in datos["clientes"].items():
+        for datos_cliente in datos["clientes"].values():
             cliente = Cliente.desde_diccionario(datos_cliente)
             sistema_nuevo.agregar_cliente(cliente)
         for numero, datos_cuenta in datos["cuentas"].items():
@@ -201,22 +209,30 @@ class SistemaBancario:
             sistema_nuevo.base_sistema[numero] = cuenta
         return sistema_nuevo
 
+
 class ContrasenaInvalidaError(Exception):
     pass
+
 
 class ContrasenaIncorrectaError(Exception):
     pass
 
+
 class ClienteNoEncontradoError(Exception):
     pass
+
 
 class CuentaNoEncontradaError(Exception):
     pass
 
+
 class SaldoInsuficienteError(Exception):
     pass
 
+
 class IntentosExcedidosError(Exception):
     pass
+
+
 class MontoInvalidoError(Exception):
     pass
