@@ -125,6 +125,11 @@ cuentas, y para guardar/cargar el estado completo.
 
 Todas heredan directamente de `Exception`.
 
+## 🧪 Cómo correr las pruebas
+
+Este proyecto aún no tiene suite de tests automatizada — es una mejora 
+planeada para v4, junto con la interfaz web.
+
 ## Ejemplos de uso
 
 ### Crear cliente, cuenta, depositar y retirar
