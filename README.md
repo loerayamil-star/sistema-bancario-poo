@@ -192,6 +192,13 @@ banco_restaurado = SistemaBancario.cargar_json("datos_banco.json")
 cuenta_recuperada = banco_restaurado.buscar_cuenta("1234567890")
 ```
 
+## ⚠️ Limitaciones conocidas
+
+- Las contraseñas se hashean con SHA-256 sin salt (ver sección de 
+  decisiones de diseño) — no apto para producción real
+- No hay reseteo automático del contador de intentos fallidos por tiempo
+- La persistencia es un único archivo JSON, sin soporte de concurrencia
+
 ## Decisiones de diseño
 
 **Hash de contraseña (SHA-256) en vez de texto plano.**
