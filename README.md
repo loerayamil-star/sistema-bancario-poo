@@ -125,10 +125,48 @@ cuentas, y para guardar/cargar el estado completo.
 
 Todas heredan directamente de `Exception`.
 
-## 🧪 Cómo correr las pruebas
+## 🧪 Tests
 
-Este proyecto aún no tiene suite de tests automatizada — es una mejora 
-planeada para v4, junto con la interfaz web.
+El proyecto tiene una suite de pruebas con `pytest` en `tests/test_cuenta.py`,
+centrada en la clase `Cuenta`. Cubre 5 casos:
+
+- **Depósito**: depositar un monto válido aumenta el saldo correctamente.
+- **Monto negativo en depósito**: depositar un monto negativo lanza
+  `MontoInvalidoError`.
+- **Saldo insuficiente**: retirar más de lo disponible lanza
+  `SaldoInsuficienteError`.
+- **Monto negativo en retiro**: retirar un monto negativo lanza
+  `MontoInvalidoError`.
+- **Transferencia a destino inválido**: transferir a una cuenta destino que
+  no es un objeto `Cuenta` válido lanza `CuentaNoEncontradaError`.
+
+Para correrla:
+
+```bash
+pip install pytest  # si no lo tenés instalado
+pytest tests/
+```
+
+### Linters de estilo y seguridad
+
+El proyecto también se puede analizar con `flake8` (estilo) y `bandit`
+(seguridad):
+
+```bash
+pip install flake8 bandit
+flake8 --max-line-length=100 sistema_bancario.py tests/
+bandit -r .
+```
+
+`bandit` está configurado (ver `.bandit`) para excluir la carpeta
+`tests/` del escaneo recursivo (`bandit -r .`). Esto evita el falso
+positivo `B101 assert_used`: pytest depende del `assert` nativo de
+Python para sus aserciones, así que su uso ahí es intencional y no un
+riesgo de seguridad real (a diferencia de código de producción, donde
+un `assert` puede eliminarse silenciosamente al compilar con
+optimizaciones). Nota: la exclusión solo aplica en modo recursivo — si
+se le pasan archivos de `tests/` explícitamente a `bandit`, igual los
+va a escanear.
 
 ## Ejemplos de uso
 
